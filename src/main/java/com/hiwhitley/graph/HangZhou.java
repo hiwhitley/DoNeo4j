@@ -7,7 +7,6 @@ import com.hiwhitley.graph.util.FileUtils;
 import org.neo4j.driver.v1.*;
 
 import java.io.File;
-import java.nio.file.AccessMode;
 import java.util.List;
 
 import static org.neo4j.driver.v1.Values.parameters;
@@ -24,16 +23,31 @@ public class HangZhou {
                 .withTrustStrategy(Config.TrustStrategy.trustCustomCertificateSignedBy(new File("/home/hiwhitley/ NEO4J_HOME/certificates/neo4j.cert")))
                 .toConfig());
 
+        HangZhou hangZhou = new HangZhou();
         Session session = driver.session();
-        StatementResult result;
+        hangZhou.generateShopNodes(session);
+        session.close();
+        driver.close();
+    }
+
+    private void generateShopNodes(Session session) {
         try (Transaction tx = session.beginTransaction()) {
-            result = tx.run("MERGE (food:杭帮菜 {name: {name}, consumptionPerPerson: {consumption}})",
-                    parameters("name", "知味观", "consumption", 64));
+            List<Shop> shops = parseInputResource("/home/hiwhitley/文档/rdf/自助餐.json");
+            for (Shop shop : shops) {
+                tx.run("MERGE (food:自助餐 {name: {name}," +
+                                "consumptionPerPerson: {consumption}, " +
+                                "recommend:{recommend}," +
+                                "taste:{taste}," +
+                                "tel:{tel}})",
+                        parameters("name", shop.getShop_name(),
+                                "consumption", shop.getAvePerPerson(),
+                                "recommend", shop.getRecommend(),
+                                "taste", shop.getTaste(),
+                                "tel", shop.getTel()));
+            }
             tx.success();
             tx.close();
         }
-        session.close();
-        driver.close();
     }
 
     public List<Shop> parseInputResource(String filePath) {

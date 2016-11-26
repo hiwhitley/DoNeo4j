@@ -5,8 +5,5 @@ package com.hiwhitley.graph;
  */
 public class Operator {
     private static StringBuilder cypher = new StringBuilder();
-
-    private addLabel() {
-
-    }
 }
+
