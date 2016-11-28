@@ -2,6 +2,7 @@ package com.hiwhitley.graph;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hiwhitley.graph.bean.Constant;
 import com.hiwhitley.graph.bean.Shop;
 import com.hiwhitley.graph.util.FileUtils;
 import org.neo4j.driver.v1.*;
@@ -25,22 +26,25 @@ public class HangZhou {
 
         HangZhou hangZhou = new HangZhou();
         Session session = driver.session();
-        hangZhou.generateShopNodes(session);
+        for (String category : Constant.categoryList) {
+            hangZhou.generateShopNodes(session, category);
+        }
         session.close();
         driver.close();
     }
 
-    private void generateShopNodes(Session session) {
+    private void generateShopNodes(Session session, String category) {
         try (Transaction tx = session.beginTransaction()) {
-            List<Shop> shops = parseInputResource("/home/hiwhitley/文档/rdf/自助餐.json");
+            List<Shop> shops = parseInputResource("/home/hiwhitley/文档/rdf/" + category + ".json");
             for (Shop shop : shops) {
-                tx.run("MERGE (food:自助餐 {name: {name}," +
-                                "consumptionPerPerson: {consumption}, " +
+                tx.run("MERGE (food{shop_name: {shop_name}," +
+                                "avePerPerson: {avePerPerson}, " +
                                 "recommend:{recommend}," +
                                 "taste:{taste}," +
-                                "tel:{tel}})",
-                        parameters("name", shop.getShop_name(),
-                                "consumption", shop.getAvePerPerson(),
+                                "tel:{tel}})" +
+                                "SET food:" + category,
+                        parameters("shop_name", shop.getShop_name(),
+                                "avePerPerson", shop.getAvePerPerson(),
                                 "recommend", shop.getRecommend(),
                                 "taste", shop.getTaste(),
                                 "tel", shop.getTel()));
