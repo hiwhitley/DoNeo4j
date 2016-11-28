@@ -43,7 +43,7 @@ public class HangZhou {
                                 "taste:{taste}," +
                                 "tel:{tel}})" +
                                 "SET food:" + category,
-                        parameters("shop_name", shop.getShop_name(),
+                        parameters("shop_name", shop.getShopName(),
                                 "avePerPerson", shop.getAvePerPerson(),
                                 "recommend", shop.getRecommend(),
                                 "taste", shop.getTaste(),
