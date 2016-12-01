@@ -35,7 +35,7 @@ public class HangZhou {
 
     private void generateShopNodes(Session session, String category) {
         try (Transaction tx = session.beginTransaction()) {
-            List<Shop> shops = parseInputResource("/home/hiwhitley/文档/rdf/" + category + ".json");
+            List<Shop> shops = FileUtils.parseInputResource("/home/hiwhitley/文档/rdf/" + category + ".json");
             for (Shop shop : shops) {
                 tx.run("MERGE (food{shop_name: {shop_name}," +
                                 "avePerPerson: {avePerPerson}, " +
@@ -52,14 +52,6 @@ public class HangZhou {
             tx.success();
             tx.close();
         }
-    }
-
-    public List<Shop> parseInputResource(String filePath) {
-        String input = FileUtils.parseJsonFromFile(filePath);
-        Gson gson = new Gson();
-        List<Shop> shopIndividualList = gson.fromJson(input, new TypeToken<List<Shop>>() {
-        }.getType());
-        return shopIndividualList;
     }
 
 }
