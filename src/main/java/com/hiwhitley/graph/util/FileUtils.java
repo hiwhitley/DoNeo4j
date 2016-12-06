@@ -1,10 +1,14 @@
 package com.hiwhitley.graph.util;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.hiwhitley.graph.bean.Shop;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,15 +40,14 @@ public class FileUtils {
 
     }
 
-
-
-    public static <T> List<T> parseInputResource(String filePath) {
-        String input = parseJsonStrFromFile(filePath);
+    public static <T> List<T> fromJsonList(String json, Class<T> cls) {
+        List<T> mList = new ArrayList<T>();
         Gson gson = new Gson();
-        List<T> list = gson.fromJson(input, new TypeToken<List<T>>() {
-        }.getType());
-        return list;
+        JsonArray array = new JsonParser().parse(json).getAsJsonArray();
+        for(final JsonElement elem : array){
+            mList.add(gson.fromJson(elem, cls));
+        }
+        return mList;
     }
-
 
 }

@@ -1,7 +1,5 @@
 package com.hiwhitley.graph;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hiwhitley.graph.bean.Constant;
 import com.hiwhitley.graph.bean.Shop;
 import com.hiwhitley.graph.util.FileUtils;
@@ -35,7 +33,8 @@ public class HangZhou {
 
     private void generateShopNodes(Session session, String category) {
         try (Transaction tx = session.beginTransaction()) {
-            List<Shop> shops = FileUtils.parseInputResource("/home/hiwhitley/文档/rdf/" + category + ".json");
+            List<Shop> shops = FileUtils.fromJsonList(
+                    FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + category + ".json"), Shop.class);
             for (Shop shop : shops) {
                 tx.run("MERGE (food{shop_name: {shop_name}," +
                                 "avePerPerson: {avePerPerson}, " +

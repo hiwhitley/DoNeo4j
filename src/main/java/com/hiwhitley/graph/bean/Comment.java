@@ -1,26 +1,29 @@
 package com.hiwhitley.graph.bean;
 
+import java.util.List;
+
 /**
  * Created by hiwhitley on 16-12-1.
  */
 public class Comment {
 
+
     /**
-     * _id : {"$oid":"583ebf9f581f52188128b184"}
+     * _id : {"$oid":"583ebf9f581f52188128b188"}
      * shop_url : http://www.dianping.com/shop/4498412
      * shop_name : 西子湖四季酒店金沙厅
-     * comment_author_link : http://www.dianping.com/member/827284559
+     * comment_author_link : http://www.dianping.com/member/409965
      * comment_support_count : 0
      * comment_rank : 4
-     * comment_time : 11-30
+     * comment_time : 11-29
      * comment_serve_rank : 3
      * pick_time : 2016-11-30 20:01:35
      * comment_reply_count : 0
-     * comment_content_imgs : 无
-     * comment_taste_rank : 3
-     * comment_id : 320224140
-     * comment_author_name : 默默~佳佳
-     * comment_content_text : 环境优雅，服务到位，味道不错。鹅肝酱配葱油饼亮了
+     * comment_content_imgs : ["http://www.dianping.com/photos/642995835/member","http://www.dianping.com/photos/642995836/member","http://www.dianping.com/photos/642995837/member","http://www.dianping.com/photos/642995838/member","http://www.dianping.com/photos/642995839/member","http://www.dianping.com/shop/4498412/photos/album/409965"]
+     * comment_taste_rank : 4
+     * comment_id : 320093736
+     * comment_author_name : kidyueer
+     * comment_content_text : 第三次来了，仍然很满意！这次为了避免等位，特意提前一周就定了位。一家四大二小，点了鸭掌、糖藕、两道点心、牛肋排、乾隆鱼头和一个蔬菜。其他几道菜不点评也罢了，最好吃的莫过于这道乾隆鱼头，虽然等了半个小时，但是鱼头处理的很干净、也很入味，加上白饭真是绝配。牛肋排稍微有点韧，但是不会感觉塞牙或者无法嚼动，原汁原味的牛肉，也很好吃。虽然价格不宜，但是食物的质量加上服务的水准，想必下次应该也不会太遥远吧！
      * comment_environment_rank : 3
      */
 
@@ -34,12 +37,12 @@ public class Comment {
     private String comment_serve_rank;
     private String pick_time;
     private int comment_reply_count;
-    private String comment_content_imgs;
     private String comment_taste_rank;
     private String comment_id;
     private String comment_author_name;
     private String comment_content_text;
     private String comment_environment_rank;
+    //private List<String> comment_content_imgs;
 
     public Id get_id() {
         return _id;
@@ -121,14 +124,6 @@ public class Comment {
         this.comment_reply_count = comment_reply_count;
     }
 
-    public String getComment_content_imgs() {
-        return comment_content_imgs;
-    }
-
-    public void setComment_content_imgs(String comment_content_imgs) {
-        this.comment_content_imgs = comment_content_imgs;
-    }
-
     public String getComment_taste_rank() {
         return comment_taste_rank;
     }
@@ -169,9 +164,17 @@ public class Comment {
         this.comment_environment_rank = comment_environment_rank;
     }
 
+//    public List<String> getComment_content_imgs() {
+//        return comment_content_imgs;
+//    }
+//
+//    public void setComment_content_imgs(List<String> comment_content_imgs) {
+//        this.comment_content_imgs = comment_content_imgs;
+//    }
+
     public static class Id {
         /**
-         * $oid : 583ebf9f581f52188128b184
+         * $oid : 583ebf9f581f52188128b188
          */
 
         private String $oid;
