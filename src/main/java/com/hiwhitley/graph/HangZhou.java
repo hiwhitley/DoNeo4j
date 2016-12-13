@@ -16,7 +16,6 @@ import static org.neo4j.driver.v1.Values.parameters;
 public class HangZhou {
 
     public static void main(String[] args) {
-
         Driver driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic("neo4j", "123"), Config.build()
                 .withEncryptionLevel(Config.EncryptionLevel.REQUIRED)
                 .withTrustStrategy(Config.TrustStrategy.trustCustomCertificateSignedBy(new File("/home/hiwhitley/ NEO4J_HOME/certificates/neo4j.cert")))
@@ -36,13 +35,15 @@ public class HangZhou {
             List<Shop> shops = FileUtils.fromJsonList(
                     FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + category + ".json"), Shop.class);
             for (Shop shop : shops) {
+                if (shop.getShop_name().equals( "名家口味堂") || shop.getShop_name().equals("弄口里主题餐厅"))
+                    continue;
                 tx.run("MERGE (food{shop_name: {shop_name}," +
                                 "avePerPerson: {avePerPerson}, " +
                                 "recommend:{recommend}," +
                                 "taste:{taste}," +
                                 "tel:{tel}})" +
                                 "SET food:" + category,
-                        parameters("shop_name", shop.getShopName(),
+                        parameters("shop_name", shop.getShop_name(),
                                 "avePerPerson", shop.getAvePerPerson(),
                                 "recommend", shop.getRecommend(),
                                 "taste", shop.getTaste(),

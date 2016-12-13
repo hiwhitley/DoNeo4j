@@ -4,29 +4,65 @@ package com.hiwhitley.graph.bean;
  * Created by hiwhitley on 16-11-25.
  */
 public class Shop {
-    /**
-     * _id : {"$oid":"58331135581f5214d9269ccb"}
-     * tel : 0571-86786210
-     * shop_name : 山葵家精致料理(武林中山店)
-     * taste : 9.
-     * avePerPerson : 156
-     * recommend : 三文鱼刺身,秋天童话,蝴蝶卷,芒果鹅肝手握,天妇罗炸大虾,三文鱼,烤鱼沙拉,牛油果反卷,汤汁炸豆腐,三文鱼炒饭,
-     * address : 中山北路403-407号
-     */
-    private IdBean _id;
-    private String tel;
-    private String shop_name;
-    private String taste;
-    private String avePerPerson;
-    private String recommend;
-    private String address;
 
-    public IdBean get_id() {
+    /**
+     * _id : {"$oid":"584b59ebd023c7297f01d484"}
+     * service : 9.2
+     * cuisines : 杭帮菜
+     * shop_name : 全乐鱼馆
+     * tel : 13867141251
+     * shop_url : http://m.dianping.com/shop/19003197
+     * taste : 9.3
+     * pick_time : 2016-12-10 09:27:07
+     * environment : 8.4
+     * avePerPerson : 72
+     * address : 千岛湖镇阳光路8—22号
+     * recommend : 鱼头浓汤,千岛湖有机鱼一鱼二吃,鱼尾红烧,螺丝,野娇娇薯粉煲,千岛深水螺丝,椒盐小溪鱼,杂鱼锅仔,剁椒鱼头,白切鸡,油爆虾
+     */
+
+    private Id _id;
+    private String service;
+    private String cuisines;
+    private String shop_name;
+    private String tel;
+    private String shop_url;
+    private String taste;
+    private String pick_time;
+    private String environment;
+    private String avePerPerson;
+    private String address;
+    private String recommend;
+
+    public Id get_id() {
         return _id;
     }
 
-    public void set_id(IdBean _id) {
+    public void set_id(Id _id) {
         this._id = _id;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
+    }
+
+    public String getCuisines() {
+        return cuisines;
+    }
+
+    public void setCuisines(String cuisines) {
+        this.cuisines = cuisines;
+    }
+
+    public String getShop_name() {
+        return shop_name;
+    }
+
+    public void setShop_name(String shop_name) {
+        this.shop_name = shop_name;
     }
 
     public String getTel() {
@@ -37,12 +73,12 @@ public class Shop {
         this.tel = tel;
     }
 
-    public String getShopName() {
-        return shop_name;
+    public String getShop_url() {
+        return shop_url;
     }
 
-    public void setShopName(String shop_name) {
-        this.shop_name = shop_name;
+    public void setShop_url(String shop_url) {
+        this.shop_url = shop_url;
     }
 
     public String getTaste() {
@@ -53,20 +89,28 @@ public class Shop {
         this.taste = taste;
     }
 
+    public String getPick_time() {
+        return pick_time;
+    }
+
+    public void setPick_time(String pick_time) {
+        this.pick_time = pick_time;
+    }
+
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
+    }
+
     public String getAvePerPerson() {
         return avePerPerson;
     }
 
     public void setAvePerPerson(String avePerPerson) {
         this.avePerPerson = avePerPerson;
-    }
-
-    public String getRecommend() {
-        return recommend;
-    }
-
-    public void setRecommend(String recommend) {
-        this.recommend = recommend;
     }
 
     public String getAddress() {
@@ -77,9 +121,17 @@ public class Shop {
         this.address = address;
     }
 
-    public static class IdBean {
+    public String getRecommend() {
+        return recommend;
+    }
+
+    public void setRecommend(String recommend) {
+        this.recommend = recommend;
+    }
+
+    public static class Id {
         /**
-         * $oid : 58331135581f5214d9269ccb
+         * $oid : 584b59ebd023c7297f01d484
          */
 
         private String $oid;
