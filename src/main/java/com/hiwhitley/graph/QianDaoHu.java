@@ -16,7 +16,7 @@ public class QianDaoHu {
                 .toConfig());
 
         Session session = driver.session();
-        Operator.generateShopNodes(session, "qiandaohuFoodShop");
+        Operator.generateShopNodes(session, "foodShop");
         session.close();
         driver.close();
     }

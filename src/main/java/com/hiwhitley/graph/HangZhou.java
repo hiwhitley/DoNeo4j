@@ -46,8 +46,8 @@ public class HangZhou {
                         parameters("shop_name", shop.getShop_name(),
                                 "avePerPerson", shop.getAvePerPerson(),
                                 "recommend", shop.getRecommend(),
-                                "taste", shop.getTaste(),
-                                "tel", shop.getTel()));
+                                "taste", shop.getRank1(),
+                                "tel", shop.getShop_tel()));
             }
             tx.success();
             tx.close();

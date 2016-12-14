@@ -17,25 +17,33 @@ import static org.neo4j.driver.v1.Values.parameters;
 public class Operator {
     public static void generateShopNodes(Session session, String fileName) {
         try (Transaction tx = session.beginTransaction()) {
-            List<Shop> shops = FileUtils.fromJsonList(
-                    FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json"), Shop.class);
+            String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
+            List<Shop> shops = FileUtils.fromJsonList(strFromFile.replace("/", "")
+                    , Shop.class);
+               // tx.run("Create constraint on (food:SHOP) ASSERT food.shop_url is UNIQUE");
             for (Shop shop : shops) {
-                tx.run("MERGE (food{shop_name: {shop_name}," +
+                tx.run("MERGE (food {shop_name: {shop_name}," +
                                 "avePerPerson: {avePerPerson}, " +
                                 "recommend:{recommend}," +
-                                "taste:{taste}," +
-                                "tel:{tel}," +
-                                "environment:{environment}," +
-                                "service:{service}," +
+                                "business_time:{business_time}," +
+                                "shop_address:{shop_address}," +
+                                "shop_rank:{shop_rank}," +
+                                "rank1:{rank1}," +
+                                "rank2:{rank2}," +
+                                "rank3:{rank3}," +
+                                "shop_tel:{tel}," +
                                 "shop_url:{shop_url}})" +
-                                "SET food:" + shop.getCuisines().replace("/",":"),
+                                "SET food:SHOP:" + shop.getClassfy().replace(" ",":"),
                         parameters("shop_name", shop.getShop_name(),
                                 "avePerPerson", shop.getAvePerPerson(),
                                 "recommend", shop.getRecommend(),
-                                "taste", shop.getTaste(),
-                                "tel", shop.getTel(),
-                                "environment", shop.getEnvironment(),
-                                "service", shop.getService(),
+                                "business_time", shop.getBusiness_time(),
+                                "shop_address", shop.getShop_address(),
+                                "shop_rank", shop.getShop_rank(),
+                                "rank1", shop.getRank1(),
+                                "rank2", shop.getRank2(),
+                                "rank3", shop.getRank3(),
+                                "tel", shop.getShop_tel(),
                                 "shop_url", shop.getShop_url()
                         )
 
