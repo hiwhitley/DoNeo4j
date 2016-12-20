@@ -1,12 +1,14 @@
 package com.hiwhitley.graph;
 
 import com.hiwhitley.graph.bean.Comment;
+import com.hiwhitley.graph.bean.Hotel;
 import com.hiwhitley.graph.bean.Shop;
 import com.hiwhitley.graph.util.FileUtils;
 import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.StatementResult;
 import org.neo4j.driver.v1.Transaction;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.neo4j.driver.v1.Values.parameters;
@@ -20,11 +22,12 @@ public class Operator {
             String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
             List<Shop> shops = FileUtils.fromJsonList(strFromFile.replace("/", "")
                     , Shop.class);
-               // tx.run("Create constraint on (food:SHOP) ASSERT food.shop_url is UNIQUE");
+            // tx.run("Create constraint on (food:SHOP) ASSERT food.shop_url is UNIQUE");
             for (Shop shop : shops) {
                 tx.run("MERGE (food {shop_name: {shop_name}," +
                                 "avePerPerson: {avePerPerson}, " +
                                 "recommend:{recommend}," +
+                                "getInfo_from:{getInfo_from}," +
                                 "business_time:{business_time}," +
                                 "shop_address:{shop_address}," +
                                 "shop_rank:{shop_rank}," +
@@ -33,10 +36,11 @@ public class Operator {
                                 "rank3:{rank3}," +
                                 "shop_tel:{tel}," +
                                 "shop_url:{shop_url}})" +
-                                "SET food:SHOP:" + shop.getClassfy().replace(" ",":"),
+                                "SET food:SHOP:" + shop.getClassfy().replace(" ", ":"),
                         parameters("shop_name", shop.getShop_name(),
                                 "avePerPerson", shop.getAvePerPerson(),
                                 "recommend", shop.getRecommend(),
+                                "getInfo_from", shop.getInfo_from(),
                                 "business_time", shop.getBusiness_time(),
                                 "shop_address", shop.getShop_address(),
                                 "shop_rank", shop.getShop_rank(),
@@ -62,7 +66,7 @@ public class Operator {
             if (run.list().size() == 0) {
                 tx.run("merge (shop{shop_name:{shop_name},shop_url:{shop_url}})",
                         parameters("shop_name", comment.getShop_name()
-                                ,"shop_url",comment.getShop_url()));
+                                , "shop_url", comment.getShop_url()));
             }
             tx.run("merge (user:USER {user_name:{user_name}, user_link:{user_link}})"
                     , parameters("user_name", comment.getComment_author_name(), "user_link", comment.getComment_author_link()));
@@ -81,6 +85,10 @@ public class Operator {
             tx.success();
             tx.close();
         }
+    }
+
+    public static <T> String checkIsNull(T src) {
+        return src == null ? "" : src.toString();
     }
 }
 

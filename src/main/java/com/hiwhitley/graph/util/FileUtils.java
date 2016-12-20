@@ -4,8 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
-import com.hiwhitley.graph.bean.Shop;
+import com.sun.istack.internal.Nullable;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -16,6 +15,7 @@ import java.util.List;
  */
 public class FileUtils {
 
+    @Nullable
     public static String parseJsonStrFromFile(String fileName) {
         String encoding = "UTF-8";
         File file = new File(fileName);
@@ -41,7 +41,7 @@ public class FileUtils {
     }
 
     public static <T> List<T> fromJsonList(String json, Class<T> cls) {
-        List<T> mList = new ArrayList<T>();
+        List<T> mList = new ArrayList<>();
         Gson gson = new Gson();
         JsonArray array = new JsonParser().parse(json).getAsJsonArray();
         for(final JsonElement elem : array){
