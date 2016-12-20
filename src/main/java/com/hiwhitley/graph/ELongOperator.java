@@ -3,6 +3,7 @@ package com.hiwhitley.graph;
 import com.hiwhitley.graph.bean.Hotel;
 import com.hiwhitley.graph.util.FileUtils;
 import org.neo4j.driver.v1.Session;
+import org.neo4j.driver.v1.StatementResult;
 import org.neo4j.driver.v1.Transaction;
 
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import static org.neo4j.driver.v1.Values.parameters;
 /**
  * Created by hiwhitley on 16-12-20.
  */
-public class ELongOperator extends Operator{
+public class ELongOperator extends Operator {
     public static void generateELongHotels(Session session, String fileName) {
         try (Transaction tx = session.beginTransaction()) {
             String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
@@ -80,6 +81,7 @@ public class ELongOperator extends Operator{
 
     /**
      * 房型
+     *
      * @param session
      * @param fileName
      */
@@ -113,6 +115,95 @@ public class ELongOperator extends Operator{
                             "->(room)", map);
                 }
             }
+            tx.success();
+            tx.close();
+        }
+    }
+
+    public static void generateNearEntertainment(Session session, String fileName) {
+        try (Transaction tx = session.beginTransaction()) {
+            String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
+            List<Hotel> hotelList = FileUtils.fromJsonList(strFromFile, Hotel.class);
+            for (Hotel hotel : hotelList) {
+                for (Hotel.NearEntertainment nearEntertainment : hotel.getNear_entertainment()) {
+                    StatementResult run = tx.run("Merge (near {shop_name:{店名}, avePerson:{avePerson}}) set near:ENTERTAINMENT",
+                            parameters(
+                                    "店名", nearEntertainment.getShopName(),
+                                    "avePerson", nearEntertainment.getAvePerson()
+                            ));
+                    System.out.println(run.list());
+                }
+            }
+
+            tx.success();
+            tx.close();
+        }
+    }
+
+    public static void generateNearEntertainmentRelation(Session session, String fileName) {
+        try (Transaction tx = session.beginTransaction()) {
+            String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
+            List<Hotel> hotelList = FileUtils.fromJsonList(strFromFile, Hotel.class);
+            for (Hotel hotel : hotelList) {
+                for (Hotel.NearEntertainment nearEntertainment : hotel.getNear_entertainment()) {
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("hotel_url", hotel.getHotel_url());
+                    map.put("shop_name", nearEntertainment.getShopName());
+                    map.put("distance", nearEntertainment.getDistance());
+                    map.put("avePerson", nearEntertainment.getAvePerson());
+                    StatementResult run = tx.run("Match (hotel:HOTEL {hotel_url:{hotel_url}}), " +
+                            "(entertainment:ENTERTAINMENT {shop_name:{shop_name}})" +
+                            "Merge (hotel)-[:hotelNearEntertainment {distance:{distance}, avePerson:{avePerson}}]->(entertainment)" +
+                            "Merge (entertainment)-[:entertainmentNearHotel {distance:{distance}}]->(hotel)", map);
+                    System.out.println(run.list());
+                }
+            }
+
+            tx.success();
+            tx.close();
+        }
+    }
+
+
+    public static void generateNearFood(Session session, String fileName) {
+        try (Transaction tx = session.beginTransaction()) {
+            String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
+            List<Hotel> hotelList = FileUtils.fromJsonList(strFromFile, Hotel.class);
+            for (Hotel hotel : hotelList) {
+                for (Hotel.NearFood nearFood : hotel.getNear_food()) {
+                    StatementResult run = tx.run("Merge (near {shop_name:{店名}, avePerson:{avePerson}}) set near:SHOP",
+                            parameters(
+                                    "店名", nearFood.getFoodName(),
+                                    "avePerson", nearFood.getAvePerson()
+                            ));
+                    System.out.println(run.list());
+                }
+            }
+
+            tx.success();
+            tx.close();
+        }
+    }
+
+    public static void generateNearFoodRelation(Session session, String fileName) {
+        try (Transaction tx = session.beginTransaction()) {
+            String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
+            List<Hotel> hotelList = FileUtils.fromJsonList(strFromFile, Hotel.class);
+            for (Hotel hotel : hotelList) {
+                for (Hotel.NearFood nearFood : hotel.getNear_food()) {
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("hotel_url", hotel.getHotel_url());
+                    map.put("shop_name", nearFood.getFoodName());
+                    map.put("distance", nearFood.getDistance());
+                    map.put("avePerson", nearFood.getAvePerson());
+                    StatementResult run = tx.run("Match (hotel:HOTEL {hotel_url:{hotel_url}}), " +
+                            "(food:SHOP {shop_name:{shop_name}})" +
+                            "Merge (hotel)-[:hotelNearFood {distance:{distance}, avePerson:{avePerson}}]->(food)" +
+                            "Merge (food)-[:foodNearHotel {distance:{distance}}]->(hotel)", map);
+                    System.out.println(run.list());
+                }
+            }
+
             tx.success();
             tx.close();
         }

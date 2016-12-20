@@ -17,9 +17,13 @@ public class ELongHotel {
         Session session = driver.session();
         session.run("Create constraint on (hotel:HOTEL) ASSERT hotel.hotel_url is UNIQUE");
         session.run("Create constraint on (room:ROOM) ASSERT room.room_type is UNIQUE");
-//        Operator.generateELongHotels(session, "elongHotel");
-//        Operator.generateRoomTypes(session, "elongHotel");
-        ELongOperator.generateRoomRelation(session, "elongHotel");
+//        ELongOperator.generateELongHotels(session, "elongHotel");
+//        ELongOperator.generateRoomTypes(session, "elongHotel");
+//        ELongOperator.generateRoomRelation(session, "elongHotel");
+//        ELongOperator.generateNearEntertainment(session, "elongHotel");
+//        ELongOperator.generateNearEntertainmentRelation(session, "elongHotel");
+//        ELongOperator.generateNearFood(session, "elongHotel");
+        ELongOperator.generateNearFoodRelation(session, "elongHotel");
         session.close();
         driver.close();
     }
