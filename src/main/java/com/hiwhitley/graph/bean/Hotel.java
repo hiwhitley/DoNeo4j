@@ -48,6 +48,8 @@ public class Hotel {
     private List<NearScenery> near_scenery;
     private List<NearShop> near_shop;
     private List<NearTraffic> near_traffic;
+    @SerializedName("near_hotel")
+    private List<NearHotel> nearHotel;
 
     public Id get_id() {
         return _id;
@@ -191,6 +193,14 @@ public class Hotel {
 
     public void setNear_traffic(List<NearTraffic> near_traffic) {
         this.near_traffic = near_traffic;
+    }
+
+    public List<NearHotel> getNearHotel() {
+        return nearHotel;
+    }
+
+    public void setNearHotel(List<NearHotel> nearHotel) {
+        this.nearHotel = nearHotel;
     }
 
     public static class Id {
@@ -534,6 +544,39 @@ public class Hotel {
 
         public void setDistance(String distance) {
             this.distance = distance;
+        }
+    }
+
+    public static class NearHotel {
+        @SerializedName("酒店名")
+        private String hotelName;
+        @SerializedName("距离")
+        private long distance;
+        @SerializedName("酒店链接")
+        private String hotelUrl;
+
+        public String getHotelName() {
+            return hotelName;
+        }
+
+        public void setHotelName(String hotelName) {
+            this.hotelName = hotelName;
+        }
+
+        public long getDistance() {
+            return distance;
+        }
+
+        public void setDistance(long distance) {
+            this.distance = distance;
+        }
+
+        public String getHotelUrl() {
+            return hotelUrl;
+        }
+
+        public void setHotelUrl(String hotelUrl) {
+            this.hotelUrl = hotelUrl;
         }
     }
 }
