@@ -27,7 +27,9 @@ public class ELongHotel {
 //        ELongOperator.generateNearHotel(session, "elongHotel");
 //        ELongOperator.generateNearHotelRelation(session, "elongHotel");
 //        ELongOperator.generateNearScenery(session, "elongHotel");
-        ELongOperator.generateNearSceneryRelation(session, "elongHotel");
+//        ELongOperator.generateNearSceneryRelation(session, "elongHotel");
+//        ELongOperator.generateNearTraffic(session, "elongHotel");
+//        ELongOperator.generateNearTrafficRelation(session, "elongHotel");
         session.close();
         driver.close();
     }

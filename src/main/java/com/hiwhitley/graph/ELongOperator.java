@@ -297,6 +297,49 @@ public class ELongOperator extends Operator {
             tx.close();
         }
     }
+    public static void generateNearTraffic(Session session, String fileName) {
+        try (Transaction tx = session.beginTransaction()) {
+            String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
+            List<Hotel> hotelList = FileUtils.fromJsonList(strFromFile, Hotel.class);
+            int i = 0;
+            for (Hotel hotel : hotelList) {
+                for (Hotel.NearTraffic nearTraffic : hotel.getNear_traffic()) {
+                    StatementResult run = tx.run("Merge (near {traffic_name:{traffic_name}}) " +
+                                    "set near:TRAFFIC",
+                            parameters(
+                                    "traffic_name", nearTraffic.getTrafficName()
+                            ));
+                    System.out.println("====>" + i++);
+                }
+            }
+
+            tx.success();
+            tx.close();
+        }
+    }
+
+    public static void generateNearTrafficRelation(Session session, String fileName) {
+        try (Transaction tx = session.beginTransaction()) {
+            String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
+            List<Hotel> hotelList = FileUtils.fromJsonList(strFromFile, Hotel.class);
+            for (Hotel hotel : hotelList) {
+                for (Hotel.NearTraffic nearTraffic : hotel.getNear_traffic()) {
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("hotel_url", hotel.getHotel_url());
+                    map.put("traffic_name", nearTraffic.getTrafficName());
+                    map.put("distance", nearTraffic.getDistance());
+                    StatementResult run = tx.run("Match (hotel:HOTEL {hotel_url:{hotel_url}}), " +
+                            "(near:TRAFFIC {traffic_name:{traffic_name}})" +
+                            "Merge (hotel)-[:hotelNearTraffic {distance:{distance}}]->(near)" +
+                            "Merge (near)-[:trafficNearHotel {distance:{distance}}]->(hotel)", map);
+                    System.out.println(run.list());
+                }
+            }
+
+            tx.success();
+            tx.close();
+        }
+    }
 
 
 
