@@ -254,4 +254,50 @@ public class ELongOperator extends Operator {
         }
     }
 
+    public static void generateNearScenery(Session session, String fileName) {
+        try (Transaction tx = session.beginTransaction()) {
+            String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
+            List<Hotel> hotelList = FileUtils.fromJsonList(strFromFile, Hotel.class);
+            int i = 0;
+            for (Hotel hotel : hotelList) {
+                for (Hotel.NearScenery nearScenery : hotel.getNear_scenery()) {
+                    StatementResult run = tx.run("Merge (near {scenery_name:{scenery_name}}) " +
+                                    "set near:SCENERY",
+                            parameters(
+                                    "scenery_name", nearScenery.getSceneryName()
+                            ));
+                    System.out.println("====>" + i++);
+                }
+            }
+
+            tx.success();
+            tx.close();
+        }
+    }
+
+    public static void generateNearSceneryRelation(Session session, String fileName) {
+        try (Transaction tx = session.beginTransaction()) {
+            String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
+            List<Hotel> hotelList = FileUtils.fromJsonList(strFromFile, Hotel.class);
+            for (Hotel hotel : hotelList) {
+                for (Hotel.NearScenery nearScenery : hotel.getNear_scenery()) {
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("hotel_url", hotel.getHotel_url());
+                    map.put("scenery_name", nearScenery.getSceneryName());
+                    map.put("distance", nearScenery.getDistance());
+                    StatementResult run = tx.run("Match (hotel:HOTEL {hotel_url:{hotel_url}}), " +
+                            "(near:SCENERY {scenery_name:{scenery_name}})" +
+                            "Merge (hotel)-[:hotelNearScenery {distance:{distance}}]->(near)" +
+                            "Merge (near)-[:sceneryNearHotel {distance:{distance}}]->(hotel)", map);
+                    System.out.println(run.list());
+                }
+            }
+
+            tx.success();
+            tx.close();
+        }
+    }
+
+
+
 }
