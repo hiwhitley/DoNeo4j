@@ -244,7 +244,7 @@ public class ELongOperator extends Operator {
                     map.put("distance", nearHotel.getDistance());
                     StatementResult run = tx.run("Match (hotel:HOTEL {hotel_url:{hotel_url}}), " +
                             "(near:HOTEL {hotel_url:{hotel_url2}})" +
-                            "Merge (hotel)-[:hotelNearHotel {distance:{distance}}]-(near)" , map);
+                            "Merge (hotel)-[:hotelNearHotel {distance:{distance}}]-(near)", map);
                     System.out.println(run.list());
                 }
             }
@@ -297,6 +297,7 @@ public class ELongOperator extends Operator {
             tx.close();
         }
     }
+
     public static void generateNearTraffic(Session session, String fileName) {
         try (Transaction tx = session.beginTransaction()) {
             String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
@@ -341,6 +342,49 @@ public class ELongOperator extends Operator {
         }
     }
 
+    public static void generateNearShopping(Session session, String fileName) {
+        try (Transaction tx = session.beginTransaction()) {
+            String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
+            List<Hotel> hotelList = FileUtils.fromJsonList(strFromFile, Hotel.class);
+            int i = 0;
+            for (Hotel hotel : hotelList) {
+                for (Hotel.NearShop nearShop : hotel.getNear_shop()) {
+                    StatementResult run = tx.run("Merge (near {shop_name:{shop_name}}) " +
+                                    "set near:SHOPPING",
+                            parameters(
+                                    "shop_name", nearShop.getShopName()
+                            ));
+                    System.out.println("====>" + i++);
+                }
+            }
+
+            tx.success();
+            tx.close();
+        }
+    }
+
+    public static void generateNearShoppingRelation(Session session, String fileName) {
+        try (Transaction tx = session.beginTransaction()) {
+            String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
+            List<Hotel> hotelList = FileUtils.fromJsonList(strFromFile, Hotel.class);
+            for (Hotel hotel : hotelList) {
+                for (Hotel.NearShop nearShop : hotel.getNear_shop()) {
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("hotel_url", hotel.getHotel_url());
+                    map.put("shop_name", nearShop.getShopName());
+                    map.put("distance", nearShop.getDistance());
+                    StatementResult run = tx.run("Match (hotel:HOTEL {hotel_url:{hotel_url}}), " +
+                            "(near:SHOPPING {shop_name:{shop_name}})" +
+                            "Merge (hotel)-[:hotelNearShopping {distance:{distance}}]->(near)" +
+                            "Merge (near)-[:shoppingNearHotel {distance:{distance}}]->(hotel)", map);
+                    System.out.println(run.list());
+                }
+            }
+
+            tx.success();
+            tx.close();
+        }
+    }
 
 
 }
