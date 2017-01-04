@@ -20,7 +20,7 @@ public class MergeCtripHotel {
         session.run("Create constraint on (room:ROOM) ASSERT room.room_type is UNIQUE");
         //CtripHotelOperator.generateCTripHotels(session, "ctripHotel");
         //CtripHotelOperator.generateIsSameAsRelation(session, "ctripHotel");
-        CtripHotelOperator.generateHotelPolicyRelation(session, "ctripHotel");
+        CtripHotelOperator.generateRoomRelation(session, "ctripHotel");
         session.close();
         driver.close();
     }

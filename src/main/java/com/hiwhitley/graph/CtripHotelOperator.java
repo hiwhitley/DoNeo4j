@@ -1,6 +1,7 @@
 package com.hiwhitley.graph;
 
 import com.hiwhitley.graph.bean.CtripHotel;
+import com.hiwhitley.graph.bean.Hotel;
 import com.hiwhitley.graph.util.FileUtils;
 import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.StatementResult;
@@ -8,6 +9,8 @@ import org.neo4j.driver.v1.Transaction;
 
 import java.util.HashMap;
 import java.util.List;
+
+import static org.neo4j.driver.v1.Values.parameters;
 
 /**
  * Created by hiwhitley on 17-1-4.
@@ -113,5 +116,63 @@ public class CtripHotelOperator extends Operator {
         }
     }
 
+    public static void generateRoomTypes(Session session, String fileName) {
+        try (Transaction tx = session.beginTransaction()) {
+            String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
+            List<CtripHotel> hotelList = FileUtils.fromJsonList(strFromFile, CtripHotel.class);
+            for (CtripHotel hotel : hotelList) {
+                for (CtripHotel.RoomTypes roomTypes : hotel.getRoom_types()) {
+                    tx.run("Merge (room:ROOM {room_type:{room_type}})",
+                            parameters("room_type", roomTypes.getRoom_type()));
+                }
+            }
+            tx.success();
+            tx.close();
+        }
+    }
+
+    public static void generateRoomRelation(Session session, String fileName) {
+        try (Transaction tx = session.beginTransaction()) {
+            String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
+            List<CtripHotel> hotelList = FileUtils.fromJsonList(strFromFile, CtripHotel.class);
+            for (CtripHotel hotel : hotelList) {
+                for (CtripHotel.RoomTypes roomTypes : hotel.getRoom_types()) {
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("hotel_url", hotel.getHotel_url());
+                    map.put("room_type", roomTypes.getRoom_type());
+                    map.put("room_type", roomTypes.getRoom_type());
+                    map.put("enable_add_bed", checkIsNull(roomTypes.getEnable_add_bed()));
+                    map.put("floor", checkIsNull(roomTypes.getFloor()));
+                    map.put("smoking_room", checkIsNull(roomTypes.getSmokingroom()));
+                    map.put("bathroom", checkIsNull(roomTypes.getBathroom()));
+                    map.put("people_num", checkIsNull(roomTypes.getPeople_num()));
+                    map.put("extras_media", checkIsNull(roomTypes.getExtras_media()));
+                    map.put("area", checkIsNull(roomTypes.getArea()));
+                    map.put("extras_facility", checkIsNull(roomTypes.getExtras_facility()));
+                    map.put("food_drinking", checkIsNull(roomTypes.getFood_drinking()));
+                    map.put("scenery", checkIsNull(roomTypes.getScenery()));
+                    map.put("info_from", hotel.getInfo_from());
+                    tx.run("Match (hotel:HOTEL {hotel_url:{hotel_url}})" +
+                            ",(room:ROOM {room_type:{room_type}})" +
+                            "merge (hotel)-" +
+                            "[:hasRoomType {room_type:{room_type}," +
+                            "enable_add_bed:{enable_add_bed}," +
+                            "floor:{floor}," +
+                            "smoking_room:{smoking_room}," +
+                            "bathroom:{bathroom}," +
+                            "people_num:{people_num}," +
+                            "area:{area}," +
+                            "extras_facility:{extras_facility}," +
+                            "food_drinking:{food_drinking}," +
+                            "scenery:{scenery}," +
+                            "info_from:{info_from}," +
+                            "extras_media:{extras_media}}]" +
+                            "->(room)", map);
+                }
+            }
+            tx.success();
+            tx.close();
+        }
+    }
 
 }
