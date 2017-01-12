@@ -16,6 +16,7 @@ import static org.neo4j.driver.v1.Values.parameters;
  * Created by hiwhitley on 17-1-4.
  */
 public class CtripHotelOperator extends Operator {
+
     public static void generateCTripHotels(Session session, String fileName) {
         try (Transaction tx = session.beginTransaction()) {
             String strFromFile = FileUtils.parseJsonStrFromFile("/home/hiwhitley/文档/rdf/" + fileName + ".json");
@@ -96,13 +97,13 @@ public class CtripHotelOperator extends Operator {
             List<CtripHotel> hotelList = FileUtils.fromJsonList(strFromFile, CtripHotel.class);
             for (CtripHotel hotel : hotelList) {
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("hotel_url", hotel.getHotel_url());
+                map.put("hotel_name", hotel.getHotel_name());
                 System.out.println(hotel.getHotel_url());
                 map.put("pet_policy", hotel.getHotel_policy().getPet_policy());
                 map.put("children_policy", hotel.getHotel_policy().getChildren_policy());
                 map.put("in_out_time", hotel.getHotel_policy().getIn_out_time());
                 map.put("acceptable_credit_card", checkIsNull(hotel.getHotel_policy().getAcceptable_credit_card()));
-                StatementResult run = tx.run("Match (hotel:HOTEL {hotel_url:{hotel_url}}) " +
+                StatementResult run = tx.run("Match (hotel:HOTEL {hotel_name:{hotel_name}}) " +
                         "Create (policy:HOTEL_POLICY {pet_policy:{pet_policy}," +
                         "children_policy:{children_policy}," +
                         "acceptable_credit_card:{acceptable_credit_card}," +
